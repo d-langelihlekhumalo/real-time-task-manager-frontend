@@ -35,9 +35,12 @@ class SignalRService {
 	}
 
 	private setupConnection() {
+		// Use relative URL in production (proxied by nginx), absolute URL in development
 		const hubUrl =
 			import.meta.env.VITE_SIGNALR_HUB_URL ||
-			'https://localhost:44355/taskManagerHub'
+			(import.meta.env.MODE === 'production'
+				? '/taskManagerHub'
+				: 'https://localhost:44355/taskManagerHub')
 
 		this.connection = new signalR.HubConnectionBuilder()
 			.withUrl(hubUrl, {
