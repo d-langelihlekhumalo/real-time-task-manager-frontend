@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: task-manager-frontend
+    ports:
+      - "3000:80"
+    environment:
+      # These can be overridden in Coolify
+      - VITE_SIGNALR_HUB_URL=http://gwk4kgc4gw48ogo4w4cow48o.84.46.249.65.sslip.io/taskManagerHub
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s

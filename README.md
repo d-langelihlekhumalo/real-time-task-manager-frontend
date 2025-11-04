@@ -240,19 +240,63 @@ The application listens for the following SignalR events:
 - **Error Handling**: User-friendly error messages
 - **Offline Support**: Graceful degradation when network is unavailable
 
-## 🐳 Docker Support
+## 🐳 Docker Deployment
+
+### Local Docker Build and Run
 
 Build and run the application using Docker:
 
 ```bash
 # Build Docker image
-npm run docker:build
+docker build -t task-manager-frontend .
 
 # Run container
-npm run docker:run
+docker run -p 3000:80 task-manager-frontend
+```
+
+Or use Docker Compose:
+
+```bash
+# Build and run with docker-compose
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop the container
+docker-compose down
 ```
 
 The containerized app will be available at `http://localhost:3000`
+
+### Coolify Deployment
+
+This application is ready for deployment on Coolify. The Dockerfile uses a multi-stage build process:
+
+1. **Build Stage**: Compiles the React/Vite application
+2. **Production Stage**: Serves the static files using Nginx
+
+#### Coolify Configuration
+
+1. **Repository**: Connect your GitHub repository in Coolify
+2. **Build Pack**: Select "Dockerfile"
+3. **Port**: Set to `80` (internal container port)
+4. **Environment Variables**: Configure in Coolify:
+   ```
+   VITE_SIGNALR_HUB_URL=http://your-backend-domain/taskManagerHub
+   ```
+
+#### Backend Connection
+
+The Nginx configuration automatically proxies:
+- `/api/*` requests to the backend API
+- `/taskManagerHub` WebSocket connections for SignalR
+
+Update the `nginx.conf` file to point to your actual backend URL before deployment.
+
+#### Health Check
+
+The Docker container includes a health check endpoint at `/health` that Coolify can use to monitor the application status.
 
 ## 🔒 Security
 
