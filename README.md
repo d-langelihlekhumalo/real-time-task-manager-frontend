@@ -289,6 +289,7 @@ This application is ready for deployment on Coolify. The Dockerfile uses a multi
 #### Backend Connection
 
 The Nginx configuration automatically proxies:
+
 - `/api/*` requests to the backend API
 - `/taskManagerHub` WebSocket connections for SignalR
 
